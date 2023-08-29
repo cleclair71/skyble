@@ -4,7 +4,7 @@ import { Animated, StyleSheet, Platform } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
-import { BlurView } from '@react-native-community/blur';
+import { BlurView } from 'expo-blur';
 
 export default function ModalScreen(props) {
   const translateY = new Animated.Value(0);
@@ -34,8 +34,8 @@ export default function ModalScreen(props) {
       onHandlerStateChange={handleStateChange}
     >
       <BlurView
-        intensity={100}  // adjust this value for desired blur intensity
-        tint="light"  // can be 'light', 'default', or 'dark'
+        intensity={100}  
+        tint="light"  
         style={{ flex: 1 }}
       >
         <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.7)',  // semi-transparent white
+    backgroundColor: 'rgba(255,255,255,0.0.1)',  
   },
   title: {
     fontSize: 20,

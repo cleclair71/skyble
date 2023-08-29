@@ -13,7 +13,7 @@ const Weather = () => {
   const [temperature, setTemperature] = useState(0);
   const [weatherCondition, setWeatherCondition] = useState(null);
   const [currentTime, setCurrentTime] = useState(getCurrentTime());
-
+  const { time, date, month, weekday } = currentTime;
   useEffect(() => {
     const interval = setInterval(() => {
         setCurrentTime(getCurrentTime());
@@ -57,27 +57,20 @@ const Weather = () => {
   if (weatherCondition) {
     return (
       <View
-        style={[
+      style={[
           styles.weatherContainer,
           { backgroundColor: weatherConditions[weatherCondition].color }
-        ]}
-      >
-        <View style={styles.headerContainer}>
-          <MaterialCommunityIcons
-            size={72}
-            name={weatherConditions[weatherCondition].icon}
-            color={'#fff'}
-          />
-          <Text style={styles.tempText}>{temperature}˚</Text>
-        </View>
-        <View style={styles.bodyContainer}>
-          <Text style={styles.title}>{weatherConditions[weatherCondition].title}</Text>
-          <Text style={styles.timeText}>{currentTime}</Text>
-          <Text style={styles.subtitle}>
-            {weatherConditions[weatherCondition].subtitle}
-          </Text>
-        </View>
-      </View>
+      ]}
+  >
+      <View style={styles.headerContainer}>
+      <Text style={styles.cityName}>Your City</Text> 
+
+      <Text style={styles.dateText}>
+          <Text style={{ fontWeight: 'normal' }}>{date} {month}</Text> <Text style={{ fontWeight: 'bold' }}>{weekday}</Text>
+      </Text>
+      <Text style={styles.tempText}>{Math.round(temperature)}˚</Text>
+     </View>
+  </View>
     );
   } else {
     return (
@@ -91,15 +84,16 @@ const Weather = () => {
 const styles = StyleSheet.create({
   weatherContainer: {
     flex: 1
+    
   },
   headerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around'
+    top: 80,
+    left: 40,
+    alignItems: 'left',
+    
   },
   tempText: {
-    fontSize: 72,
+    fontSize: 160,
     color: '#fff'
   },
   bodyContainer: {
@@ -129,6 +123,17 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 30,
     color: '#fff'
+},
+cityName: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  color: '#fff',
+  textAlign: 'left'
+},
+dateText: {
+  fontSize: 18,
+  color: '#fff',
+  textAlign: 'left' 
 }
 });
 

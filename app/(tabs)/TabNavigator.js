@@ -34,7 +34,7 @@ function TabNavigator() {
         style={styles.searchIconContainer}
         onPress={() => setModalVisible(true)}
       >
-        <Icon name="search" size={30} color="white" />  
+        <Icon name="search" size={20} color="rgba(255,255,255,0.5)"/>  
       </TouchableOpacity>
 
       
@@ -87,15 +87,16 @@ const styles = StyleSheet.create({
   },
   searchIconContainer: {
     position: 'absolute',
-    top: 30, // or adjust as needed
-    right: 10, // or adjust as needed
+    top: 40, 
+    right: 10, 
     zIndex: 10, 
-    padding: 10, // makes it easier to tap
+    padding: 10, 
   },
   searchIcon: {
-    width: 30,  // adjust size as needed
-    height: 30, // adjust size as needed
+    width: 30,  
+    height: 30, 
     resizeMode: 'contain',
+    color: 'rgba(255,255,255,0.5)',
   }
 });
 
