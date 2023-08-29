@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, TouchableOpacity, Modal, Image } from 'reac
 import SwipeRender from 'react-native-swipe-render';
 import Weather from './index';
 import Two from './two.tsx';
-import ModalScreen from '../modal.tsx'; 
+import ModalScreen from '../modal.js'; 
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 
 function TabNavigator() {
@@ -29,15 +29,15 @@ function TabNavigator() {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.container}>
-      {/* Add the Search Icon */}
+      
       <TouchableOpacity 
         style={styles.searchIconContainer}
         onPress={() => setModalVisible(true)}
       >
-        <Icon name="search" size={30} color="black" />  {/* Use the FontAwesome search icon */}
+        <Icon name="search" size={30} color="white" />  
       </TouchableOpacity>
 
-      {/* Render the Modal */}
+      
       <Modal
         animationType="slide"
         transparent={true}
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   searchIconContainer: {
     position: 'absolute',
-    top: 10, // or adjust as needed
+    top: 30, // or adjust as needed
     right: 10, // or adjust as needed
     zIndex: 10, 
     padding: 10, // makes it easier to tap

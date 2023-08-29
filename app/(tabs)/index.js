@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { weatherConditions } from '../../utils/WeatherConditions';
 import * as Location from 'expo-location';
+import { getCurrentTime } from '../../utils/dateUtils';
 
 const API_KEY = '849338767c0e95025b5559533d26b7c4';
 
@@ -11,6 +12,15 @@ const Weather = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [temperature, setTemperature] = useState(0);
   const [weatherCondition, setWeatherCondition] = useState(null);
+  const [currentTime, setCurrentTime] = useState(getCurrentTime());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setCurrentTime(getCurrentTime());
+    }, 60000);  // Update the time every 60 seconds
+
+    return () => clearInterval(interval);
+}, []);
 
   useEffect(() => {
     (async () => {
@@ -62,6 +72,7 @@ const Weather = () => {
         </View>
         <View style={styles.bodyContainer}>
           <Text style={styles.title}>{weatherConditions[weatherCondition].title}</Text>
+          <Text style={styles.timeText}>{currentTime}</Text>
           <Text style={styles.subtitle}>
             {weatherConditions[weatherCondition].subtitle}
           </Text>
@@ -114,7 +125,11 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 30
-  }
+  },
+  timeText: {
+    fontSize: 30,
+    color: '#fff'
+}
 });
 
 export default Weather;

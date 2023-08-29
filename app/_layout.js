@@ -6,7 +6,7 @@ import { SplashScreen } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import ModalScreen from './modal.tsx';
+import ModalScreen from './modal.js';
 import TabNavigator from './(tabs)/TabNavigator.js';
 
 export default function RootLayout() {
