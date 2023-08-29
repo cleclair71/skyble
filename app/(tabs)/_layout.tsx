@@ -1,7 +1,8 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
-
+import { IoPersonCircleSharp } from 'react-icons/io5';
+import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 
 /**
@@ -46,8 +47,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <Ionicons name="person-circle-sharp" size={28} color={color} />,
         }}
       />
     </Tabs>
