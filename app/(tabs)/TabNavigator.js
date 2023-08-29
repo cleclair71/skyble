@@ -1,16 +1,22 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View, StyleSheet } from 'react-native';
+import SwipeRender from 'react-native-swipe-render';
 import Weather from './index'; // Assuming this is where your WeatherApp component is
 import Two from './two.tsx'; // The second tab
 
-const Tab = createBottomTabNavigator();
-
 function TabNavigator() {
   return (
-    <Tab.Navigator initialRouteName="Weather">
-      <Tab.Screen name="Weather" component={Weather} />
-      <Tab.Screen name="Two" component={Two} />
-    </Tab.Navigator>
+    <SwipeRender
+        // OPTIONAL PROP USAGE.
+        index={0} // start from the first view
+        loop={false} // disable looping
+        loadMinimal={true}
+        loadMinimalSize={2}
+        horizontal={true}
+    >
+        <Weather />
+        <Two />
+    </SwipeRender>
   );
 }
 
