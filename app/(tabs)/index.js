@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ImageBackground, View, Text, StyleSheet, Animated } from 'react-native';
 import PropTypes from 'prop-types';
 import { weatherConditions } from '../../utils/WeatherConditions';
 import * as Location from 'expo-location';
@@ -11,16 +10,20 @@ const API_KEY = '849338767c0e95025b5559533d26b7c4';
 const Weather = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [temperature, setTemperature] = useState(0);
+  const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
   const [weatherCondition, setWeatherCondition] = useState(null);
+  const [city, setCity] = useState('');
   const [currentTime, setCurrentTime] = useState(getCurrentTime());
   const { time, date, month, weekday } = currentTime;
+  const position = useState(new Animated.Value(0))[0];
+
   useEffect(() => {
     const interval = setInterval(() => {
-        setCurrentTime(getCurrentTime());
-    }, 60000);  // Update the time every 60 seconds
+      setCurrentTime(getCurrentTime());
+    }, 60000);
 
     return () => clearInterval(interval);
-}, []);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -35,13 +38,34 @@ const Weather = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    const animateImage = () => {
+      Animated.sequence([
+        Animated.timing(position, {
+          toValue: -50,
+          duration: 5000,
+          useNativeDriver: false
+        }),
+        Animated.timing(position, {
+          toValue: 0,
+          duration: 5000,
+          useNativeDriver: false
+        }),
+        Animated.delay(1000)  // Add a delay of 1 second before the sequence starts again.
+      ]).start(() => animateImage());
+    }
+
+    animateImage();
+  }, []);
+
+
   const fetchWeather = (lat, lon) => {
     fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=metric`)
       .then(res => res.json())
       .then(json => {
-        console.log(json); 
         setTemperature(json.main.temp);
         setWeatherCondition(json.weather[0].main);
+        setCity(json.name);
         setIsLoading(false);
       });
   }
@@ -56,21 +80,20 @@ const Weather = () => {
 
   if (weatherCondition) {
     return (
-      <View
-      style={[
-          styles.weatherContainer,
-          { backgroundColor: weatherConditions[weatherCondition].color }
-      ]}
-  >
-      <View style={styles.headerContainer}>
-      <Text style={styles.cityName}>Your City</Text> 
-
-      <Text style={styles.dateText}>
-          <Text style={{ fontWeight: 'normal' }}>{date} {month}</Text> <Text style={{ fontWeight: 'bold' }}>{weekday}</Text>
-      </Text>
-      <Text style={styles.tempText}>{Math.round(temperature)}˚</Text>
-     </View>
-  </View>
+      <View style={styles.mainContainer}>
+        <AnimatedImageBackground
+          source={weatherConditions[weatherCondition].backgroundImage}
+          style={[styles.weatherContainer, { left: position }]}
+        />
+        <View style={styles.headerContainer}>
+          <Text style={styles.cityName}>{city}</Text>
+          <Text style={styles.dateText}>
+            <Text style={{ fontWeight: 'normal' }}>{date} {month}</Text>
+            <Text style={{ fontWeight: 'bold' }}>{weekday}</Text>
+          </Text>
+          <Text style={styles.tempText}>{Math.round(temperature)}˚</Text>
+        </View>
+      </View>
     );
   } else {
     return (
@@ -82,15 +105,21 @@ const Weather = () => {
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    position: 'relative',
+  },
   weatherContainer: {
-    flex: 1
-    
+    flex: 1,
+    height: '100%',
+    width: '200%',
+    position: 'absolute', 
+    top: 0,
   },
   headerContainer: {
     top: 80,
     left: 40,
-    alignItems: 'left',
-    
+    alignItems: 'flex-start',  // Corrected from 'left' to 'flex-start'
   },
   tempText: {
     fontSize: 160,
@@ -123,18 +152,18 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 30,
     color: '#fff'
-},
-cityName: {
-  fontSize: 24,
-  fontWeight: 'bold',
-  color: '#fff',
-  textAlign: 'left'
-},
-dateText: {
-  fontSize: 18,
-  color: '#fff',
-  textAlign: 'left' 
-}
+  },
+  cityName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'left'
+  },
+  dateText: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'left'
+  }
 });
 
 export default Weather;
