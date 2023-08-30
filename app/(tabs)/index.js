@@ -3,19 +3,22 @@ import { ImageBackground, View, Text, StyleSheet, Animated } from 'react-native'
 import PropTypes from 'prop-types';
 import { weatherConditions } from '../../utils/WeatherConditions';
 import * as Location from 'expo-location';
-import { getCurrentTime } from '../../utils/dateUtils';
+import { getTimeOfDay, getSeason } from '../../utils/dateUtils';
 
 const API_KEY = '849338767c0e95025b5559533d26b7c4';
 
 const Weather = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [temperature, setTemperature] = useState(0);
-  const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
+  const [timeOfDay, setTimeOfDay] = useState('day');  // Default to day
+  const [season, setSeason] = useState('summer');     // Default to summer
   const [weatherCondition, setWeatherCondition] = useState(null);
-  const [city, setCity] = useState('');
   const [currentTime, setCurrentTime] = useState(getCurrentTime());
+  const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
+  const [city, setCity] = useState('');
   const { time, date, month, weekday } = currentTime;
   const position = useState(new Animated.Value(0))[0];
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,6 +73,8 @@ const Weather = () => {
       });
   }
 
+  const background = weatherCondition ? weatherConditions[weatherCondition].backgroundImage[season][timeOfDay] : null;
+
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -82,17 +87,18 @@ const Weather = () => {
     return (
       <View style={styles.mainContainer}>
         <AnimatedImageBackground
-          source={weatherConditions[weatherCondition].backgroundImage}
+          source={background}
           style={[styles.weatherContainer, { left: position }]}
-        />
+        >
         <View style={styles.headerContainer}>
           <Text style={styles.cityName}>{city}</Text>
           <Text style={styles.dateText}>
-            <Text style={{ fontWeight: 'normal' }}>{date} {month}</Text>
+            <Text style={{ fontWeight: 'normal' }}>{date} {month}, </Text>
             <Text style={{ fontWeight: 'bold' }}>{weekday}</Text>
           </Text>
           <Text style={styles.tempText}>{Math.round(temperature)}˚</Text>
         </View>
+        </AnimatedImageBackground>
       </View>
     );
   } else {
