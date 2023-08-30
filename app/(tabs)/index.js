@@ -3,7 +3,7 @@ import { ImageBackground, View, Text, StyleSheet, Animated } from 'react-native'
 import PropTypes from 'prop-types';
 import { weatherConditions } from '../../utils/WeatherConditions';
 import * as Location from 'expo-location';
-import { getTimeOfDay, getSeason } from '../../utils/dateUtils';
+import { getCurrentTime, getTimeOfDay, getSeason } from '../../utils/dateUtils';
 
 const API_KEY = '849338767c0e95025b5559533d26b7c4';
 
@@ -89,7 +89,8 @@ const Weather = () => {
         <AnimatedImageBackground
           source={background}
           style={[styles.weatherContainer, { left: position }]}
-        >
+        />
+        {/* The text is now outside the AnimatedImageBackground */}
         <View style={styles.headerContainer}>
           <Text style={styles.cityName}>{city}</Text>
           <Text style={styles.dateText}>
@@ -98,7 +99,6 @@ const Weather = () => {
           </Text>
           <Text style={styles.tempText}>{Math.round(temperature)}˚</Text>
         </View>
-        </AnimatedImageBackground>
       </View>
     );
   } else {
