@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';    
 import { ImageBackground, View, Text, StyleSheet, Animated } from 'react-native';
 import PropTypes from 'prop-types';
 import { weatherConditions } from '../../utils/WeatherConditions';
 import * as Location from 'expo-location';
 import { getCurrentTime, getTimeOfDay, getSeason } from '../../utils/dateUtils';
+import * as Font from 'expo-font';
 
 const API_KEY = '849338767c0e95025b5559533d26b7c4';
 
@@ -54,13 +55,26 @@ const Weather = () => {
           duration: 5000,
           useNativeDriver: false
         }),
-        Animated.delay(1000)  
+        // Animated.delay(1000)  
       ]).start(() => animateImage());
     }
 
     animateImage();
   }, []);
 
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+useEffect(() => {
+  async function loadFonts() {
+    await Font.loadAsync({
+      'Archivo-Bold': require('../../assets/fonts/Archivo-Bold.ttf'),
+      'Roboto-Thin': require('../../assets/fonts/Roboto-Thin.ttf'),
+      'Roboto-Medium': require('../../assets/fonts/Roboto-Medium.ttf')
+    });
+    setFontLoaded(true);
+  }
+  loadFonts();
+}, []);
 
   const fetchWeather = (lat, lon) => {
     fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=metric`)
@@ -95,7 +109,7 @@ const Weather = () => {
           <Text style={styles.cityName}>{city}</Text>
           <Text style={styles.dateText}>
             <Text style={{ fontWeight: 'normal' }}>{date} {month}, </Text>
-            <Text style={{ fontWeight: 'bold' }}>{weekday}</Text>
+            <Text style={styles.weekdayText}>{weekday}</Text>
           </Text>
           <Text style={styles.tempText}>{Math.round(temperature)}˚</Text>
         </View>
@@ -125,11 +139,14 @@ const styles = StyleSheet.create({
   headerContainer: {
     top: 80,
     left: 40,
-    alignItems: 'flex-start',  // Corrected from 'left' to 'flex-start'
+    alignItems: 'flex-start',  
   },
   tempText: {
     fontSize: 160,
-    color: '#fff'
+    color: '#fff',
+    fontFamily: 'Archivo-Bold',
+    marginLeft: -10,
+    letterSpacing: -2,
   },
   bodyContainer: {
     flex: 2,
@@ -160,16 +177,29 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   cityName: {
-    fontSize: 24,
+    fontSize: 34,
     fontWeight: 'bold',
     color: '#fff',
-    textAlign: 'left'
+    textAlign: 'left',
+    fontFamily: 'Roboto-Medium',
+    marginBottom: 10,
+    letterSpacing: -2,
   },
   dateText: {
-    fontSize: 18,
+    fontSize: 22,
     color: '#fff',
-    textAlign: 'left'
-  }
+    textAlign: 'left',
+    fontFamily: 'Roboto-Thin',
+    marginBottom: -5,
+    letterSpacing: -2,
+    
+  },
+  weekdayText: {
+    fontWeight: 'bold',
+    color: '#fff',
+    fontFamily: 'Roboto-Medium',
+    
+  },
 });
 
 export default Weather;
