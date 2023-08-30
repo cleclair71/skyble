@@ -51,7 +51,7 @@ const Weather = () => {
           duration: 5000,
           useNativeDriver: false
         }),
-        Animated.delay(1000)  // Add a delay of 1 second before the sequence starts again.
+        Animated.delay(1000)  
       ]).start(() => animateImage());
     }
 
