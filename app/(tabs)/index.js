@@ -5,35 +5,42 @@ import { weatherConditions } from '../../utils/WeatherConditions';
 import * as Location from 'expo-location';
 import { getCurrentTime, getTimeOfDay, getSeason } from '../../utils/dateUtils';
 import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
 
 
 const API_KEY = '849338767c0e95025b5559533d26b7c4';
 
-const Weather = () => {
+const Weather = ({ city }) => {   
   const [isLoading, setIsLoading] = useState(true);
   const [temperature, setTemperature] = useState(0);
-  const [timeOfDay, setTimeOfDay] = useState('day');  // Default to day
-  const [season, setSeason] = useState('summer');     // Default to summer
+  const [timeOfDay, setTimeOfDay] = useState('day');
+  const [season, setSeason] = useState('summer');
   const [weatherCondition, setWeatherCondition] = useState(null);
   const [currentTime, setCurrentTime] = useState(getCurrentTime());
   const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
   const position = useState(new Animated.Value(0))[0];
-  const [city, setCity] = useState(null);   // Initialize with null
   const { time, date, month, weekday } = currentTime;
-  
+
+  useEffect(() => {
+    if (city) {
+        fetchWeatherByCity(city);
+    }
+}, [city]);
+
+const fetchWeatherByCity = (cityName) => {
+  fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${API_KEY}&units=metric`)
+    .then(res => res.json())
+    .then(json => {
+      setTemperature(json.main.temp);
+      setWeatherCondition(json.weather[0].main);
+      setIsLoading(false);
+    });
+}
   useEffect(() => {
     fetchWeatherBasedOnCurrentLocation();
   }, []);
 
-  const fetchWeatherByCity = (cityName) => {
-    fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${API_KEY}&units=metric`)
-      .then(res => res.json())
-      .then(json => {
-        setTemperature(json.main.temp);
-        setWeatherCondition(json.weather[0].main);
-        setIsLoading(false);
-      });
-  }
+
   useEffect(() => {
     const animateImage = () => {
       Animated.sequence([
@@ -71,7 +78,6 @@ const Weather = () => {
       .then(json => {
         setTemperature(json.main.temp);
         setWeatherCondition(json.weather[0].main);
-        setCity(json.name);   // Set the city state here
         setIsLoading(false);
       });
   }

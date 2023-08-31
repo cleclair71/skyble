@@ -41,7 +41,7 @@ export default function ModalScreen(props) {
         <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>
           <Text style={styles.title}>City Search</Text>
           {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
-          <EditScreenInfo onCitySelect={props.fetchWeatherByCity} path="app/modal.js" />
+          <EditScreenInfo onCitySelect={props.onCitySelect} path="app/modal.js" />
           <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         </Animated.View>
       </BlurView>
