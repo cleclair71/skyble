@@ -34,14 +34,14 @@ export default function ModalScreen(props) {
       onHandlerStateChange={handleStateChange}
     >
       <BlurView
-        intensity={100}  
+        intensity={50}  
         tint="light"  
         style={{ flex: 1 }}
       >
         <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>
-          <Text style={styles.title}>Modal</Text>
-          <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-          <EditScreenInfo path="app/modal.js" />
+          <Text style={styles.title}>City Search</Text>
+          {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
+          <EditScreenInfo onCitySelect={props.fetchWeatherByCity} path="app/modal.js" />
           <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         </Animated.View>
       </BlurView>
@@ -53,16 +53,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'top',
+    marginTop: 80,
     backgroundColor: 'rgba(255,255,255,0.0.1)',  
   },
   title: {
-    fontSize: 20,
+    fontSize: 40,
     fontWeight: 'bold',
+    paddingBottom: 20,
+
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+  // separator: {
+  //   marginVertical: 20,
+  //   height: 1,
+  //   width: '100%',
+  // },
 });

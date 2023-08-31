@@ -6,6 +6,7 @@ import * as Location from 'expo-location';
 import { getCurrentTime, getTimeOfDay, getSeason } from '../../utils/dateUtils';
 import * as Font from 'expo-font';
 
+
 const API_KEY = '849338767c0e95025b5559533d26b7c4';
 
 const Weather = () => {
@@ -16,32 +17,23 @@ const Weather = () => {
   const [weatherCondition, setWeatherCondition] = useState(null);
   const [currentTime, setCurrentTime] = useState(getCurrentTime());
   const AnimatedImageBackground = Animated.createAnimatedComponent(ImageBackground);
-  const [city, setCity] = useState('');
-  const { time, date, month, weekday } = currentTime;
   const position = useState(new Animated.Value(0))[0];
-
-
+  const [city, setCity] = useState(null);   // Initialize with null
+  const { time, date, month, weekday } = currentTime;
+  
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(getCurrentTime());
-    }, 60000);
-
-    return () => clearInterval(interval);
+    fetchWeatherBasedOnCurrentLocation();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setError('Permission to access location was denied');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      fetchWeather(location.coords.latitude, location.coords.longitude);
-    })();
-  }, []);
-
+  const fetchWeatherByCity = (cityName) => {
+    fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityName}&APPID=${API_KEY}&units=metric`)
+      .then(res => res.json())
+      .then(json => {
+        setTemperature(json.main.temp);
+        setWeatherCondition(json.weather[0].main);
+        setIsLoading(false);
+      });
+  }
   useEffect(() => {
     const animateImage = () => {
       Animated.sequence([
@@ -62,19 +54,16 @@ const Weather = () => {
     animateImage();
   }, []);
 
-  const [fontLoaded, setFontLoaded] = useState(false);
+  const fetchWeatherBasedOnCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.error('Permission to access location was denied');
+      return;
+    }
 
-useEffect(() => {
-  async function loadFonts() {
-    await Font.loadAsync({
-      'Archivo-Bold': require('../../assets/fonts/Archivo-Bold.ttf'),
-      'Roboto-Thin': require('../../assets/fonts/Roboto-Thin.ttf'),
-      'Roboto-Medium': require('../../assets/fonts/Roboto-Medium.ttf')
-    });
-    setFontLoaded(true);
+    let location = await Location.getCurrentPositionAsync({});
+    fetchWeather(location.coords.latitude, location.coords.longitude);
   }
-  loadFonts();
-}, []);
 
   const fetchWeather = (lat, lon) => {
     fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=metric`)
@@ -82,7 +71,7 @@ useEffect(() => {
       .then(json => {
         setTemperature(json.main.temp);
         setWeatherCondition(json.weather[0].main);
-        setCity(json.name);
+        setCity(json.name);   // Set the city state here
         setIsLoading(false);
       });
   }
@@ -100,11 +89,11 @@ useEffect(() => {
   if (weatherCondition) {
     return (
       <View style={styles.mainContainer}>
+        
         <AnimatedImageBackground
           source={background}
           style={[styles.weatherContainer, { left: position }]}
         />
-        {/* The text is now outside the AnimatedImageBackground */}
         <View style={styles.headerContainer}>
           <Text style={styles.cityName}>{city}</Text>
           <Text style={styles.dateText}>
