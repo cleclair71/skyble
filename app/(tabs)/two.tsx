@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import ProfileScreen from '../screens/Weather';
+import ProfileScreen from '../../screens/Weather';
 import EditScreenInfo from '../../components/EditScreenInfo';
 import { Text, View } from '../../components/Themed';
 

@@ -8,5 +8,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/screens/Weather.js", "app/_layout.js", "app/(tabs)/index.js", "app/modal.js", "components/EditScreenInfo.js"  ]
+, "screens/Weather.js", "app/_layout.js", "app/(tabs)/index.js", "app/modal.js", "components/EditScreenInfo.js"  ]
 }

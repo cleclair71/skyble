@@ -6,6 +6,7 @@ import * as Location from 'expo-location';
 import { getCurrentTime, getTimeOfDay, getSeason } from '../../utils/dateUtils';
 import * as Font from 'expo-font';
 import { useFonts } from 'expo-font';
+import LoadingComponent from '../../components/Loading.js'
 
 
 const API_KEY = '849338767c0e95025b5559533d26b7c4';
@@ -86,9 +87,7 @@ const fetchWeatherByCity = (cityName) => {
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Fetching The Weather</Text>
-      </View>
+      <LoadingComponent />
     );
   }
 
